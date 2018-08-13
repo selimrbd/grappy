@@ -17,4 +17,7 @@ Tool for downloading media content from internet
 * setup a default directory where videos/audio are downloaded. Syncrhonize my audio repo with my spotify
 
 # Resources
+* [DL public youtube videos](https://pythontips.com/2018/04/23/reverse-engineering-facebook-video/)
+* [cut ou portion of video](https://stackoverflow.com/questions/37317140/cutting-out-a-portion-of-video-python)
+* [pytube: DL youtube videos](https://github.com/nficano/pytube)
 * 
