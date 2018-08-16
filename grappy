@@ -1,0 +1,79 @@
+#!/usr/bin/env python 
+import sys, os, shutil, glob
+from pytube import YouTube
+import config as cfg
+from moviepy.editor import VideoFileClip
+
+def process_timestamp(t):
+	if len(t.split(':')) == 1:
+		return int(t)
+	elif len(t.split(':')) == 2:
+		tmp = t.split(':')
+		res = int(tmp[0])*60 + int(tmp[1])
+		return res
+	elif len(t.split(':')) == 3:
+		tmp = t.split(':')
+		res = int(tmp[0])*3600 + int(tmp[1])*60 + int(tmp[2])
+		return res
+	else:
+		raise 'error in the format: ' + t
+	
+
+
+if __name__ == '__main__':
+
+	## TODO: --help default mode
+	assert len(sys.argv) > 1, 'no help mode yet'
+
+	command = sys.argv[1]
+	assert command in ['dl', 'cut'], "invalid command"
+
+	if command == 'dl':
+		assert len(sys.argv) > 2, 'no link provided'
+		link = sys.argv[2]
+
+		# youtube stream
+		yt = YouTube(link).streams.first()
+	
+		# define the filename
+		filename = yt.default_filename if '--name' not in sys.argv else (sys.argv[sys.argv.index('--name')+1])
+		# download
+		assert (('--t1' in sys.argv) == ('--t2' in sys.argv)), "specify both --t1 and --t2"
+		if '--t1' in sys.argv:
+			# download the file
+			tmp_file_name = 'grappy_tmp_dl'
+			yt.download(filename = tmp_file_name)
+			tmp_file_path = glob.glob(tmp_file_name+'*')[0]
+			file_extension = os.path.splitext(tmp_file_path)[1]	
+			# get the cutting timestamps
+			t1 = process_timestamp(sys.argv[sys.argv.index('--t1') + 1])
+			t2 = process_timestamp(sys.argv[sys.argv.index('--t2') + 1])
+			# cut it
+			myvideo = VideoFileClip(tmp_file_path)
+			myvideo = myvideo.subclip(t1,t2)
+			myvideo.write_videofile(filename)
+			## cleanup
+			path_file = glob.glob(filename + '*')[0]
+			shutil.move(path_file, cfg.video_dir)
+			os.remove(tmp_file_path)			
+		else:
+			# simply download the file
+			yt.download(output_path = cfg.video_dir, filename = filename)
+
+	if command == 'cut':
+		
+		path = sys.argv[2]
+		name = os.path.splitext(os.path.basename(path))[0]
+		ext  = os.path.splitext(os.path.basename(path))[1]
+
+		## default filename
+		filename =  (name + '-cut' + ext) if '--name' not in sys.argv else (sys.argv[sys.argv.index('--name')+1] + ext)
+		print(filename)	
+		# get the cutting timestamps
+		t1 = process_timestamp(sys.argv[sys.argv.index('--t1') + 1])
+		t2 = process_timestamp(sys.argv[sys.argv.index('--t2') + 1])
+		# cut it
+		myvideo = VideoFileClip(path)
+		myvideo = myvideo.subclip(t1,t2)
+		myvideo.write_videofile(os.path.join(cfg.video_dir,filename))
+		
