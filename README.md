@@ -20,18 +20,20 @@ This is basically a wrapper around core functionalities of [moviepy](https://git
 
 See *config.py* to specify a default folder where to move downloaded videos
 
-## First milestone
+## Milestones
 
-* Download a full youtube video
-* Crop a video between 2 given timestamps
-* Download a youtube video and directly specify the cropping in the arguments
+### First milestone
 
-## Second milestone
+* :heavy_check_mark: Download a full youtube video
+* :heavy_check_mark: Crop a video between 2 given timestamps
+* :heavy_check_mark: Download a youtube video and directly specify the cropping in the arguments
 
-* convert a video to audio directly
-* download a full playlist of videos to audio format
+### Second milestone
 
-## further improvements
+* :white_check_mark: convert a video to audio directly
+* :white_check_mark: download a full playlist of videos to audio format
+
+### Further improvements
 
 * DL videos from facebook, instagram, soundcloud, ...
 * synchronize downloaded music with spotify
